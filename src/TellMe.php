@@ -24,6 +24,8 @@ class TellMe
             $data = array_merge($this->_initVars(), $data);
         }
 
+        $data['time'] = date('Y-m-d H:i:s');
+
         foreach ($this->config['channels'] as $channel) {
             $Provider = $this->getProvider($channel);
             $Provider->translate($data)->send();
@@ -53,6 +55,7 @@ class TellMe
         ob_start();
         debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::DEBUG_LIMIT);
         $errors['trace'] = ob_get_flush();
+        $errors['title'] = 'An error occurred';
 
         return $errors;
     }
@@ -66,6 +69,7 @@ class TellMe
             'file'    => $e->getFile(),
             'trace'   => $e->getTraceAsString(),
             'level'   => 'Execption',
+            'title'   => $e->getMessage(),
         ];
     }
 }

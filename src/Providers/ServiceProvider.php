@@ -10,7 +10,7 @@ abstract class ServiceProvider
     protected $translatedData = [];
 
     // seconds
-    const HTTP_TIMEOUT = 5.0;
+    const HTTP_TIMEOUT = 6.0;
 
     public function __construct($channel)
     {
@@ -22,22 +22,29 @@ abstract class ServiceProvider
     {
         foreach ($this->channel['data'] as $key => $value) {
             $this->translatedData[$key] = preg_replace_callback('/(\{(\w+)\})/', function ($matches) use ($data) {
-                return isset($data[$matches[1][0]]) ? $data[$matches[1][0]] : '';
+                return isset($data[$matches[2]]) ? $data[$matches[2]] : '';
             }, $value);
         }
+
+        return $this;
     }
 
     protected function get($key, $default = null)
     {
-        return isset($this->translatedData[$key]) ? $this->translatedData[$key] : $default;
+        return isset($this->channel[$key]) ? $this->channel[$key] : $default;
     }
 
     protected function httpPost($url, $data)
     {
-        $Client = new Client(['timeout' => self::HTTP_TIMEOUT]);
-        return $Client->request('POST', $url, ['body' => $data]);
+        try {
+            $Client = new Client(['timeout' => self::HTTP_TIMEOUT]);
+            return $Client->request('POST', $url, ['form_params' => $data]);
+        } catch (\Exception $e) {
+            return false;
+        }
+
     }
 
     // 各自的发送方法
-    abstract public function send($data);
+    abstract public function send();
 }

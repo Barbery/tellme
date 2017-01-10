@@ -22,7 +22,7 @@ return [
 
     'channels'        => [
         [
-            'template_id'  => 'SAJNHOya9H9xI7w_q33I2h_M9Q-h2Tun4WPRLJ4Iey0',
+            'template_id'  => 'YOUR TEMPLATE ID',
             'provider'     => 'wechat',
             'to'           => [],
             'easywechat'   => null,
@@ -46,7 +46,7 @@ return [
             'provider' => 'slack',
             'data'     => [
                 'username' => 'tellme-bot',
-                'icon_url' => 'https://cdn7.61qt.cn/panel/header_logo.d7536ba2da0a0d67686e74913487f6cb.png',
+                'icon_url' => 'http://ww3.sinaimg.cn/large/7376ce75gw1fbljeafka2j206k09amxh.jpg',
                 'text'     => "{title} \n {message} \n {trace}",
             ],
         ],
@@ -78,6 +78,8 @@ return [
         ],
     ],
     'providers'       => [
-        'email' => Barbery\TellMe\Provider\EmailProvider::class,
+        'email'  => Barbery\TellMe\Provider\EmailProvider::class,
+        'wechat' => Barbery\TellMe\Provider\WechatProvider::class,
+        'slack'  => Barbery\TellMe\Provider\SlackProvider::class,
     ],
 ];

@@ -17,6 +17,7 @@ class WechatProvider extends ServiceProvider
             }
         }
 
+        $ret = true;
         foreach ($this->get('to', []) as $toUser) {
             $data = [
                 'touser'      => $toUser,
@@ -25,9 +26,14 @@ class WechatProvider extends ServiceProvider
                 'topcolor'    => $this->get('topcolor', ''),
                 'data'        => $this->translatedData,
             ];
-            $Wechat->notice->send($data);
+
+            try {
+                $Wechat->notice->send($data);
+            } catch (\Exception $e) {
+                $ret = false;
+            }
         }
 
-        return true;
+        return $ret;
     }
 }
