@@ -43,7 +43,7 @@ return [
             ],
         ],
         [
-            'url'      => 'https://hooks.pubu.im/services/yzl4w3r1lbl8sbn',
+            'url'      => 'YOUR SLACK URL',
             'provider' => 'slack',
             'data'     => [
                 'username' => 'tellme-bot',
@@ -52,7 +52,7 @@ return [
             ],
         ],
         [
-            'url'      => 'https://hooks.slack.com/services/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',
+            'url'      => 'YOUR SLACK URL',
             'provider' => 'slack',
             'data'     => [
                 'username'   => 'tellme-bot',
