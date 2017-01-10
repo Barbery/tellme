@@ -2,6 +2,7 @@
 
 return [
     'error_level_map' => [
+        0                   => 'Error',
         E_ERROR             => 'Error',
         E_WARNING           => 'Warning',
         E_PARSE             => 'Parse error',
@@ -34,9 +35,9 @@ return [
                 'aes_key' => '',
             ],
             'data'         => [
-                'first'    => '{title}',
+                'first'    => '{message}',
                 'keyword1' => '{level}',
-                'keyword2' => '{message}',
+                'keyword2' => '{file}:{line}',
                 'keyword3' => '{time}',
                 'remark'   => '详细信息：{trace}',
             ],
@@ -47,7 +48,7 @@ return [
             'data'     => [
                 'username' => 'tellme-bot',
                 'icon_url' => 'http://ww3.sinaimg.cn/large/7376ce75gw1fbljeafka2j206k09amxh.jpg',
-                'text'     => "{title} \n {message} \n {trace}",
+                'text'     => "{message} \n {trace}",
             ],
         ],
         [
@@ -56,7 +57,7 @@ return [
             'data'     => [
                 'username'   => 'tellme-bot',
                 'icon_emoji' => ':ghost:',
-                'text'       => "{title} \n {message} \n {trace}",
+                'text'       => "{message} \n {trace}",
             ],
         ],
         [
@@ -72,14 +73,14 @@ return [
             'port'        => 587,
             'is_html'     => false,
             'data'        => [
-                'title'   => '{title}',
-                'content' => "{title} \n {message} \n {trace}",
+                'title'   => '{message}',
+                'content' => "{message} \n {trace}",
             ],
         ],
     ],
     'providers'       => [
-        'email'  => Barbery\TellMe\Provider\EmailProvider::class,
-        'wechat' => Barbery\TellMe\Provider\WechatProvider::class,
-        'slack'  => Barbery\TellMe\Provider\SlackProvider::class,
+        'email'  => Barbery\TellMe\Providers\EmailProvider::class,
+        'wechat' => Barbery\TellMe\Providers\WechatProvider::class,
+        'slack'  => Barbery\TellMe\Providers\SlackProvider::class,
     ],
 ];

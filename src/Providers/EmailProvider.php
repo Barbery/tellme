@@ -1,6 +1,6 @@
 <?php
 
-namespace Barbery\TellMe\Provider;
+namespace Barbery\TellMe\Providers;
 
 class EmailProvider extends ServiceProvider
 {
@@ -31,7 +31,7 @@ class EmailProvider extends ServiceProvider
             $Mailer->Body    = $this->translatedData['content'];
             $Mailer->AltBody = strip_tags($this->translatedData['content']);
 
-            dd($Mailer->send(), $Mailer->ErrorInfo);
+            return $Mailer->send();
         } catch (\Exception $e) {
             return false;
         }

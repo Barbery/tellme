@@ -5,17 +5,16 @@
     "description": "",
     "keywords": ["tellme"],
     "homepage": "https://github.com/Barbery/tellme",
-    "license": "BSD",
+    "license": "Apache2.0",
     "authors": [
         {
             "name": "Barbery Xie",
-            "email": "a6798246@gmail.com",
             "homepage": "http://www.barbery.me",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.0",
         "overtrue/wechat": "~3.0",
         "phpmailer/phpmailer": "~5.2",
         "guzzlehttp/guzzle":"~6.2"

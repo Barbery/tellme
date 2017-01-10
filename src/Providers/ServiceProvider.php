@@ -1,6 +1,6 @@
 <?php
 
-namespace Barbery\TellMe\Provider;
+namespace Barbery\TellMe\Providers;
 
 use GuzzleHttp\Client;
 

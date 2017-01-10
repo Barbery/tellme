@@ -3,10 +3,12 @@
 namespace Barbery\TellMe;
 
 use Exception;
+use Throwable;
 
 class TellMe
 {
     private $config = [];
+    private $data   = [];
 
     const DEBUG_LIMIT = 50;
 
@@ -16,19 +18,42 @@ class TellMe
         $this->config = array_merge($coreConfig, $config);
     }
 
-    public function send($data = [])
+    public static function registerThrowableHandler($config)
     {
-        if ($data instanceof Exception) {
-            $data = $this->_initExceptionVars($data);
-        } else {
-            $data = array_merge($this->_initVars(), $data);
-        }
+        $exceptionHandler = function ($e) use ($config) {
+            $class = self::class;
+            (new $class($config))->send($e);
+            throw $e;
+        };
 
-        $data['time'] = date('Y-m-d H:i:s');
+        $errorHandler = function ($errno, $errstr, $errfile, $errline, $errcontext) {
+            $class = self::class;
+            (new $class($config))->setData([
+                'code'    => $errno,
+                'message' => $errstr,
+                'file'    => $errfile,
+                'line'    => $errline,
+            ])->send();
 
+            return false;
+        };
+
+        set_exception_handler($exceptionHandler);
+        set_error_handler($errorHandler);
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    public function send(Throwable $e = null)
+    {
+        $this->_initErrorVars($e);
         foreach ($this->config['channels'] as $channel) {
             $Provider = $this->getProvider($channel);
-            $Provider->translate($data)->send();
+            $Provider->translate($this->data)->send();
         }
     }
 
@@ -43,40 +68,30 @@ class TellMe
         return new $provider($channel);
     }
 
-    private function _initErrorVars()
+    private function _initErrorVars(Throwable $e)
     {
-        $errors = error_get_last();
-        if (empty($errors)) {
-            return [];
+        $errorVars = [];
+        if (!empty($e)) {
+            $errorVars = [
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+                'line'    => $e->getLine(),
+                'file'    => $e->getFile(),
+                'trace'   => $this->getTrace($e),
+                'level'   => $e instanceof Execption ? 'Execption' : $this->config['error_level_map'][$e->getCode()],
+            ];
         }
 
-        $errors['level'] = $this->config['error_level_map'][$errors['type']];
-        $errors['code']  = 500;
-        $errors['trace'] = $this->getTrace();
-        $errors['title'] = 'An error occurred';
-
-        return $errors;
+        $this->data['time'] = date('Y-m-d H:i:s');
+        $this->data         = array_merge($errorVars, $this->data);
     }
 
-    private function _initExceptionVars(Exception $e)
-    {
-        return [
-            'code'    => $e->getCode(),
-            'message' => $e->getMessage(),
-            'line'    => $e->getLine(),
-            'file'    => $e->getFile(),
-            'trace'   => $this->getTrace($e),
-            'level'   => 'Execption',
-            'title'   => $e->getMessage(),
-        ];
-    }
-
-    private function getTrace(Exception $e = null)
+    private function getTrace(Throwable $e = null)
     {
         return function () use ($e) {
             static $trace = null;
             if (empty($trace)) {
-                if ($e !== null) {
+                if (is_object($e)) {
                     $trace = $e->getTraceAsString();
                 } else {
                     ob_start();
