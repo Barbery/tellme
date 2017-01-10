@@ -1,0 +1,26 @@
+{
+    "name": "barbery/tellme",
+    "type": "library",
+    "time": "2016-04-08",
+    "description": "",
+    "keywords": ["tellme"],
+    "homepage": "https://github.com/Barbery/tellme",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Barbery Xie",
+            "email": "a6798246@gmail.com",
+            "homepage": "http://www.barbery.me",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "overtrue/wechat": "~3.0",
+        "phpmailer/phpmailer": "~5.2",
+        "guzzlehttp/guzzle":"~6.2"
+    },
+    "autoload": {
+        "psr-4": {"Barbery\\TellMe\\": "src/"}
+    }
+}
