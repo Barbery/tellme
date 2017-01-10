@@ -8,7 +8,7 @@ class TellMe
 {
     private $config = [];
 
-    const DEBUG_LIMIT = 100;
+    const DEBUG_LIMIT = 50;
 
     public function __construct($config = [])
     {
@@ -52,9 +52,7 @@ class TellMe
 
         $errors['level'] = $this->config['error_level_map'][$errors['type']];
         $errors['code']  = 500;
-        ob_start();
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::DEBUG_LIMIT);
-        $errors['trace'] = ob_get_flush();
+        $errors['trace'] = $this->getTrace();
         $errors['title'] = 'An error occurred';
 
         return $errors;
@@ -67,9 +65,27 @@ class TellMe
             'message' => $e->getMessage(),
             'line'    => $e->getLine(),
             'file'    => $e->getFile(),
-            'trace'   => $e->getTraceAsString(),
+            'trace'   => $this->getTrace($e),
             'level'   => 'Execption',
             'title'   => $e->getMessage(),
         ];
+    }
+
+    private function getTrace(Exception $e = null)
+    {
+        return function () use ($e) {
+            static $trace = null;
+            if (empty($trace)) {
+                if ($e !== null) {
+                    $trace = $e->getTraceAsString();
+                } else {
+                    ob_start();
+                    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::DEBUG_LIMIT);
+                    $trace = ob_get_flush();
+                }
+            }
+
+            return $trace;
+        };
     }
 }

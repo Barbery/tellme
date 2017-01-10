@@ -22,7 +22,13 @@ abstract class ServiceProvider
     {
         foreach ($this->channel['data'] as $key => $value) {
             $this->translatedData[$key] = preg_replace_callback('/(\{(\w+)\})/', function ($matches) use ($data) {
-                return isset($data[$matches[2]]) ? $data[$matches[2]] : '';
+                if (!isset($data[$matches[2]])) {
+                    return '';
+                } elseif (is_callable($data[$matches[2]])) {
+                    return $data[$matches[2]]();
+                } else {
+                    return $data[$matches[2]];
+                }
             }, $value);
         }
 
