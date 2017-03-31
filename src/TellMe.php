@@ -78,7 +78,7 @@ class TellMe
                 'line'    => $e->getLine(),
                 'file'    => $e->getFile(),
                 'trace'   => $this->getTrace($e),
-                'level'   => $e instanceof Execption ? 'Execption' : $this->config['error_level_map'][$e->getCode()],
+                'level'   => $this->getLevel($e),
             ];
         }
 
@@ -102,5 +102,16 @@ class TellMe
 
             return $trace;
         };
+    }
+
+    private function getLevel()
+    {
+        if ($e instanceof Execption) {
+            return 'Execption';
+        } elseif (isset($this->config['error_level_map'][$e->getCode()])) {
+            return $this->config['error_level_map'][$e->getCode()];
+        } else {
+            return 'other errors';
+        }
     }
 }
