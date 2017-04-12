@@ -106,8 +106,8 @@ class TellMe
 
     private function getLevel()
     {
-        if ($e instanceof Execption) {
-            return 'Execption';
+        if ($e instanceof Exception) {
+            return 'Exception';
         } elseif (isset($this->config['error_level_map'][$e->getCode()])) {
             return $this->config['error_level_map'][$e->getCode()];
         } else {
