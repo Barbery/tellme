@@ -26,7 +26,7 @@ class TellMe
             throw $e;
         };
 
-        $errorHandler = function ($errno, $errstr, $errfile, $errline, $errcontext) {
+        $errorHandler = function ($errno, $errstr, $errfile, $errline, $errcontext) use ($config) {
             $class = self::class;
             (new $class($config))->setData([
                 'code'    => $errno,
@@ -104,7 +104,7 @@ class TellMe
         };
     }
 
-    private function getLevel()
+    private function getLevel($e)
     {
         if ($e instanceof Exception) {
             return 'Exception';
