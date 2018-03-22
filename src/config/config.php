@@ -77,10 +77,25 @@ return [
                 'content' => "{message} \n {trace}",
             ],
         ],
+        [
+            'provider' => 'dingtalk',
+            'url'      => 'YOUR DINGTALK URL',
+            'data'     => [
+                'msgtype' => 'text',
+                'text'    => [
+                    'content' => "{message} \n {trace}",
+                ],
+                'at'      => [
+                    'atMobiles' => [],
+                    'isAtAll'   => false,
+                ],
+            ],
+        ],
     ],
     'providers'       => [
-        'email'  => Barbery\TellMe\Providers\EmailProvider::class,
-        'wechat' => Barbery\TellMe\Providers\WechatProvider::class,
-        'slack'  => Barbery\TellMe\Providers\SlackProvider::class,
+        'email'    => Barbery\TellMe\Providers\EmailProvider::class,
+        'wechat'   => Barbery\TellMe\Providers\WechatProvider::class,
+        'slack'    => Barbery\TellMe\Providers\SlackProvider::class,
+        'dingtalk' => Barbery\TellMe\Providers\DingtalkProvider::class,
     ],
 ];

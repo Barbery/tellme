@@ -20,19 +20,30 @@ abstract class ServiceProvider
     // 把配置的数据转换成实际数据
     public function translate($data)
     {
-        foreach ($this->channel['data'] as $key => $value) {
-            $this->translatedData[$key] = preg_replace_callback('/(\{(\w+)\})/', function ($matches) use ($data) {
-                if (!isset($data[$matches[2]])) {
-                    return '';
-                } elseif (is_callable($data[$matches[2]])) {
-                    return $data[$matches[2]]();
-                } else {
-                    return $data[$matches[2]];
-                }
-            }, $value);
+        $this->translatedData = $this->_translate($this->channel['data'], $data);
+        return $this;
+    }
+
+    private function _translate($format, $data)
+    {
+        $result = [];
+        foreach ($format as $key => $value) {
+            if (is_array($value)) {
+                $result[$key] = $this->_translate($value, $data);
+            } else {
+                $result[$key] = preg_replace_callback('/(\{(\w+)\})/', function ($matches) use ($data) {
+                    if (!isset($data[$matches[2]])) {
+                        return '';
+                    } elseif (is_callable($data[$matches[2]])) {
+                        return $data[$matches[2]]();
+                    } else {
+                        return $data[$matches[2]];
+                    }
+                }, $value);
+            }
         }
 
-        return $this;
+        return $result;
     }
 
     protected function get($key, $default = null)
@@ -48,7 +59,20 @@ abstract class ServiceProvider
         } catch (\Exception $e) {
             return false;
         }
+        return true;
+    }
 
+    protected function httpPostJson($url, $data)
+    {
+        try {
+            $Client = new Client(['timeout' => self::HTTP_TIMEOUT]);
+            return $Client->request('POST', $url, [
+                'json' => $data,
+            ]);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     // 各自的发送方法

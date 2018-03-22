@@ -6,7 +6,7 @@
 ## What it is
 
 TellMe 是一个报警推送的工具，主要功能是消息推送，可以让大家及时收到生产的错误反馈。
-目前支持微信、瀑布（零信）、Slack、Email这几种方式的推送。
+目前支持微信、瀑布（零信）、Slack、Email、钉钉这几种方式的推送。
 
 
 ## Install
@@ -54,6 +54,20 @@ $config = [
                 'username' => 'tellme-bot',
                 'icon_url' => 'http://ww3.sinaimg.cn/large/7376ce75gw1fbljeafka2j206k09amxh.jpg',
                 'text'     => "{message} \n {trace}",
+            ],
+        ],
+        [
+            'provider' => 'dingtalk',
+            'url'      => 'YOUR DINGTALK URL',
+            'data'     => [
+                'msgtype' => 'text',
+                'text'    => [
+                    'content' => "{message} \n {trace}",
+                ],
+                'at'      => [
+                    'atMobiles' => [],
+                    'isAtAll'   => false,
+                ],
             ],
         ],
     ],
