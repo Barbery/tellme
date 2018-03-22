@@ -48,6 +48,12 @@ class TellMe
         return $this;
     }
 
+    public function addData($data)
+    {
+        $this->data = array_merge($this->data, $data);
+        return $this;
+    }
+
     public function send(Throwable $e = null)
     {
         $this->_initErrorVars($e);
